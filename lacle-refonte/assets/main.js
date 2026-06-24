@@ -13,12 +13,37 @@
   // menu mobile
   var burger = document.querySelector('.nav-burger');
   var links  = document.querySelector('.nav-links');
-  if (burger && links) {
+  if (burger && links && nav) {
+    var backdrop = document.createElement('div');
+    backdrop.className = 'nav-backdrop';
+    nav.appendChild(backdrop);
+
+    var closeMenu = function () {
+      links.classList.remove('open');
+      backdrop.classList.remove('open');
+      burger.classList.remove('is-open');
+      document.documentElement.classList.remove('nav-open');
+      burger.setAttribute('aria-expanded', 'false');
+    };
+    var openMenu = function () {
+      links.classList.add('open');
+      backdrop.classList.add('open');
+      burger.classList.add('is-open');
+      document.documentElement.classList.add('nav-open');
+      burger.setAttribute('aria-expanded', 'true');
+    };
+
+    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-label', 'Ouvrir le menu');
     burger.addEventListener('click', function () {
-      links.classList.toggle('open');
+      if (links.classList.contains('open')) { closeMenu(); } else { openMenu(); }
     });
+    backdrop.addEventListener('click', closeMenu);
     links.querySelectorAll('a').forEach(function (a) {
-      a.addEventListener('click', function () { links.classList.remove('open'); });
+      a.addEventListener('click', closeMenu);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { closeMenu(); }
     });
   }
 
